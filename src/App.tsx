@@ -3,7 +3,7 @@ import Logo from "./components/Logo";
 import Form from "./components/Form";
 import PackingList from "./components/PackingList";
 import Stats from "./components/Stats";
-import { initialItems } from "./constants";
+// import { initialItems } from "./constants";
 import "./index.css"
 
 interface itemTypes {
@@ -13,13 +13,24 @@ interface itemTypes {
 	packed : boolean
 }
 const App = () => {
-    const [items, setItems] = useState<itemTypes []>(initialItems);
+    const [items, setItems] = useState<itemTypes []>([]);
     const [toggledTasksCount, setToggledTasksCount] = useState<number>(0)
 
     useEffect(() => {
         setToggledTasksCount(() => items.filter(item => item.packed).length);
     }, [items]);
-
+    const handlePacking = (id : number) => {
+        console.log(id)
+        setItems(items =>  items.map(item => {
+            if (item.id === id) {
+                return {...item, packed : !item.packed}
+            }
+            console.log(item.id, id)
+            return item}));
+    }
+    const handleSorting = () => {
+        setItems((items) => [...items].sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase())))
+    }
     // function to add a new task
     const addItem = (newItem: itemTypes) => {
         setItems((prevItems) => [...prevItems, newItem])
@@ -39,8 +50,14 @@ const App = () => {
     return (
         <div className="app">
             <Logo />
-            <Form onAddItem={addItem} />
-            <PackingList items={items} onDeleteItem={deleteItem} onClearTasks={clearTasks} />
+            <Form items={items} onAddItem={addItem} />
+            <PackingList 
+            items={items}
+            onPack={handlePacking}
+            onDeleteItem={deleteItem}
+            onClearTasks={clearTasks}
+            onSort={handleSorting}
+            />
             <Stats count={items.length} toggledTasks={toggledTasksCount} />
         </div>
     )

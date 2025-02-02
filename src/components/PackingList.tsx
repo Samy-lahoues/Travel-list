@@ -9,9 +9,11 @@ interface itemTypes {
 interface packingListProps{
     items : itemTypes [],
     onClearTasks : () => void,
-    onDeleteItem : (id :number) => void
+    onDeleteItem : (id :number) => void,
+    onPack : (id : number) => void,
+    onSort : () => void
 }
-const PackingList = ({items, onDeleteItem, onClearTasks} : packingListProps) => {
+const PackingList = ({items, onDeleteItem, onClearTasks, onPack, onSort} : packingListProps) => {
     const [isEmpty, setIsEmpty] = useState(false)
     useEffect(() => {
         setIsEmpty(false)
@@ -26,12 +28,13 @@ const PackingList = ({items, onDeleteItem, onClearTasks} : packingListProps) => 
                 description={item.description}
                 quantity={item.quantity}
                 packed={item.packed}
-                deleteItem={onDeleteItem} />
+                deleteItem={onDeleteItem}
+                onPack={onPack}/>
                 )
                 )}
         </ul>
             <div className="actions">
-                <button>SORT BY INPUT ORDER</button>
+                <button onClick={() => onSort()}>SORT BY INPUT ORDER</button>
                 <button onClick={() => {
                     onClearTasks();
                     setIsEmpty(() => items.length === 0 ? !isEmpty : isEmpty)

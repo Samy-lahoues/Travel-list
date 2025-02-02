@@ -7,18 +7,18 @@ interface itemTypes {
 	packed : boolean
 }
 interface formProps {
+	items : itemTypes [];
 	onAddItem : (item : itemTypes) => void,
-	// itemsLength : number
 }
 
-const Form = ({onAddItem} : formProps) => {
+const Form = ({items , onAddItem} : formProps) => {
 	const [quantity, setQuantity] = useState<number>(1);
 	const [description, setDescription] = useState<string>('');
 	const handleSubmit = (event : FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		if (description.trim().length === 0) return ;
 		const newItem : itemTypes = {
-			id : Date.now(),
+			id : items.length,
 			description : description,
 			quantity : quantity,
 			packed : false
