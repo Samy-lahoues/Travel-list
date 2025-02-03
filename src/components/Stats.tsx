@@ -1,14 +1,26 @@
 
-interface statsProps{
-    count : number ,
-    toggledTasks : number
+interface itemTypes {
+	id : number,
+	description : string,
+	quantity : number,
+	packed : boolean
 }
-const Stats = ({count, toggledTasks} : statsProps) => {
+interface statsProps{
+    items : itemTypes [] ,
+}
+const Stats = ({items} : statsProps) => {
+    if (items.length === 0){
+        return <footer className="stats"> <em>Start adding new items to your packing list</em> 🚀</footer>
+    }
+    const itemsNum : number = items.length;
+    const numPacked : number = items.filter(item => item.packed).length
+    const percentage : number = Math.floor((100 * numPacked) / itemsNum);
     return (
-        <footer>
-            <div className='stats'>
-                💼 You have {count} items on your list, and you already packed {toggledTasks} {count !== 0 ? Math.floor((100 * toggledTasks) / count) : 0}%
-            </div>
+        <footer className='stats'>
+            <em>
+                {percentage === 100 ? "You got everything Ready to go ✈"
+                : `💼 You have ${itemsNum} items on your list, and you already packed ${numPacked} (${percentage}%)`}
+            </em>
         </footer>
     )
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import Logo from "./components/Logo";
 import Form from "./components/Form";
 import PackingList from "./components/PackingList";
@@ -14,11 +14,7 @@ interface itemTypes {
 }
 const App = () => {
     const [items, setItems] = useState<itemTypes []>([]);
-    const [toggledTasksCount, setToggledTasksCount] = useState<number>(0)
-
-    useEffect(() => {
-        setToggledTasksCount(() => items.filter(item => item.packed).length);
-    }, [items]);
+    
     const handlePacking = (id : number) => {
         console.log(id)
         setItems(items =>  items.map(item => {
@@ -28,9 +24,17 @@ const App = () => {
             console.log(item.id, id)
             return item}));
     }
-    const handleSorting = () => {
-        setItems((items) => [...items].sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase())))
-    }
+    // const handleSorting = (sortingMethod : string) => {
+    //     setItems((items) => {
+    //         if (sortingMethod === "description") {
+    //             return [...items].sort((a, b) => a.description.toLowerCase().localeCompare(b.description.toLowerCase()))
+    //         }
+    //         else if (sortingMethod === "packed"){
+    //             return [...items].sort((a, b) => a.quantity - b.quantity)
+    //         }
+    //         return items
+    //     })
+    // }
     // function to add a new task
     const addItem = (newItem: itemTypes) => {
         setItems((prevItems) => [...prevItems, newItem])
@@ -50,15 +54,15 @@ const App = () => {
     return (
         <div className="app">
             <Logo />
-            <Form items={items} onAddItem={addItem} />
+            <Form onAddItem={addItem} />
             <PackingList 
             items={items}
             onPack={handlePacking}
             onDeleteItem={deleteItem}
             onClearTasks={clearTasks}
-            onSort={handleSorting}
+            // onSort={handleSorting}
             />
-            <Stats count={items.length} toggledTasks={toggledTasksCount} />
+            <Stats items={items} />
         </div>
     )
 }
